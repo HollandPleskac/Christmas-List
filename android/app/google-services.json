@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "205483177407",
+    "firebase_url": "https://pleskac-christmas-list-v1.firebaseio.com",
+    "project_id": "pleskac-christmas-list-v1",
+    "storage_bucket": "pleskac-christmas-list-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205483177407:android:a6954c7a0736961ae35d0a",
+        "android_client_info": {
+          "package_name": "com.hollandpleskac.pleskac_christmas_list"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205483177407-ltbfmc4rcblc00r3ne65kfnmeu1fietk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcq6qeKlQeMeE77RRwb_AMC3RaL_697i0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205483177407-ltbfmc4rcblc00r3ne65kfnmeu1fietk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
