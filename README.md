@@ -1,3 +1,3 @@
 # Pleskac-Christmas-List
-An app where users in can buy gifts for each other.
-dsfa
+Version one ofthe Name Gifts App.
+Just for one family
