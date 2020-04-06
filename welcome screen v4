@@ -196,7 +196,7 @@ class WelcomeScreen extends StatelessWidget {
               children: <Widget>[
                 Text(
                   'Welcome',
-                  style: TextStyle(color: Colors.white, fontSize: 39),
+                  style: TextStyle(color: Colors.white, fontSize: 38),
                 ),
               ],
             ),
