@@ -1,0 +1,21 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:name_gifts/Business_Logic/fire.dart';
+
+class MyMembersScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Text('my members screen'),
+            Text(
+              'logged in as' + FirebaseAuth.instance.currentUser().toString(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
