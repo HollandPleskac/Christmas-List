@@ -1,0 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final Firestore _firestore = Firestore.instance;
+
+class Fire {
+  void createAccount(String email, String password, String displayName) {
+    _firestore.collection("PleskacFamily").document('uid').setData({
+      "email": email,
+      "password": password,
+      "display name": displayName,
+      "linked?": null,
+    });
+  }
+
+  void addFamilyMember(String memberName) {
+    _firestore.collection("PleskacFamily").document("uid").get().then(
+      (DocumentSnapshot ds) {
+        //if the current account signed in is a linked account
+        if (ds['linked?'] != null) {
+          _firestore
+              .collection("PleskacFamily")
+              .document(ds['linked?']).collection('Members').document(memberName)
+              .setData({'member name': memberName});
+        } else {
+          //if the current account is not a linked account
+          _firestore
+              .collection("PleskacFamily")
+              .document('uid').collection('Members').document(memberName)
+              .setData({'member name': memberName});
+          print('null vlaue of linked this is a parent account');
+        }
+      },
+    );
+  }
+
+  void addGift(String giftName) {
+    //check if the account is linked and if it is then add gift to parent if not then just add gift to account
+  }
+}
