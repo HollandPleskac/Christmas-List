@@ -1,2 +1,2 @@
-# Name-Gifts
-An app where users in can buy gifts for each other.
+# V3
+this is the version where multiple groups of people can use the app
