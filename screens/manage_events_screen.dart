@@ -143,9 +143,7 @@ class _ManageEventsScreenState extends State<ManageEventsScreen> {
                                   eventId,
                                   _displayNameForEventController.text,
                                 );
-                                setState(() {
-                                  
-                                });
+                                setState(() {});
                                 Navigator.pop(context);
 
                                 ///
@@ -188,8 +186,15 @@ class _ManageEventsScreenState extends State<ManageEventsScreen> {
                       child: ListView(
                         children: snapshot.data.documents.map(
                           (DocumentSnapshot document) {
-                            return event(context, document['event name'],
-                                document.documentID);
+                            // event type does not exist so make it exist in firebase
+                            //should be a condition that tells this method if the event is u are part of family or if you are a full member
+                            if (document['event type'] == 'event') {
+                              return event(context, document['event name'],
+                                  document.documentID);
+                            } else {
+                              return familyMemberInEvent(
+                                  context, document['event name'], document.documentID);
+                            }
                           },
                         ).toList(),
                       ),
@@ -244,6 +249,47 @@ Widget event(BuildContext context, String name, String eventUID) {
           ),
           elevation: 3,
           color: Colors.white,
+          onPressed: () async {
+            FirebaseUser _currentUser = await _firebaseAuth.currentUser();
+            _fire.setSelectedEvent(_currentUser.uid, eventUID);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TabPage(),
+              ),
+            );
+          },
+          child: Text(
+            name,
+            style: TextStyle(
+                color: Color.fromRGBO(37, 151, 234, 1),
+                fontSize: 18,
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget familyMemberInEvent(BuildContext context, String name, String eventUID) {
+  return Column(
+    children: <Widget>[
+      SizedBox(
+        height: MediaQuery.of(context).size.height * 0.02,
+      ),
+      Container(
+        height: MediaQuery.of(context).size.height * 0.0525,
+        width: MediaQuery.of(context).size.width * 0.82,
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              width: 1,
+              color: Colors.grey[100],
+            ),
+          ),
+          elevation: 3,
+          color: Colors.red,
           onPressed: () async {
             FirebaseUser _currentUser = await _firebaseAuth.currentUser();
             _fire.setSelectedEvent(_currentUser.uid, eventUID);

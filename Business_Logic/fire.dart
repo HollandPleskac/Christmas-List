@@ -243,8 +243,8 @@ class Fire {
   ///
   //////////////////
 
-  void sendInvite(
-      String uid, String eventId, String email, String eventName, String host) async {
+  void sendInvite(String uid, String eventId, String email, String eventName,
+      String host) async {
     String uidOfPersonRecievingInvite = await _firestore
         .collection('UserData')
         .where('email', isEqualTo: email)
@@ -268,6 +268,7 @@ class Fire {
         'hosting': false,
         'host': host,
         'invite type': 'event',
+        'host uid': uid,
       },
     );
   }
@@ -285,7 +286,7 @@ class Fire {
         'event name': eventName,
         'display name': displayNameForEvent,
         'hosting': false,
-        'type': '',
+        'event type': 'event',
       },
     );
 
@@ -324,7 +325,7 @@ class Fire {
   //////////////////
 
   void inviteToFamily(
-      String uid, String eventId, String email, String eventName) async {
+      String uid, String eventId, String email, String familyName) async {
     String uidOfPersonRecievingInvite = await _firestore
         .collection('UserData')
         .where('email', isEqualTo: email)
@@ -341,31 +342,68 @@ class Fire {
         .setData(
       {
         'invite type': 'family',
-        'event name': eventName,
+        'family name': familyName,
         'host': email,
+        'invite to family event id': eventId,
+        'invite to family uid': uid,
       },
     );
   }
 
-  void acceptInviteToFamily(
-      String uid, String eventId, String acceptedMembersName) {
+  void acceptInviteToFamily(String uidOfFamily, String eventIdOfFamily,
+      String acceptedMembersName, String userUid, String eventName) {
     _firestore
         .collection('Events')
-        .document(eventId)
+        .document(eventIdOfFamily)
         .collection('members')
-        .document(uid)
+        .document(uidOfFamily)
         .collection('members')
         .document(acceptedMembersName)
         .setData(
-      {'linked?': uid},
+      {'linked?': uidOfFamily},
     );
 
     // deletes the family invite out of invites list
     _firestore
         .collection("UserData")
-        .document(uid)
+        .document(userUid)
         .collection('invites')
-        .document(eventId)
+        .document(eventIdOfFamily)
         .delete();
+
+    //add this event of users list of events
+    // adds the user to the event
+    _firestore
+        .collection("UserData")
+        .document(userUid)
+        .collection('my events')
+        .document(eventIdOfFamily)
+        .setData(
+      {
+        'event name': eventName,
+        'display name': acceptedMembersName,
+        'hosting': false,
+        'event type': 'family',
+        'host uid': uidOfFamily,
+      },
+    );
+
+    //update the count of users
+    final DocumentReference postRef = Firestore.instance
+        .collection('Events')
+        .document(eventIdOfFamily)
+        .collection('members')
+        .document(uidOfFamily);
+    _firestore.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      if (postSnapshot.exists) {
+        await tx.update(postRef,
+            <String, dynamic>{'members': postSnapshot.data['members'] + 1});
+      }
+    });
   }
+}
+
+void removeIndependantUserGift() {
+  // coming soon
 }

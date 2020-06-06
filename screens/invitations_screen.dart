@@ -32,25 +32,25 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   Future getEventId(uid) async {
-    String eventID =
-        await _firestore.collection("UserData").document(uid).get().then(
-              (documentSnapshot) => documentSnapshot.data['selected event'],
-            );
-    eventId = eventID;
+    try {
+      String eventID =
+          await _firestore.collection("UserData").document(uid).get().then(
+                (documentSnapshot) => documentSnapshot.data['selected event'],
+              );
+      eventId = eventID;
+    } catch (_) {
+      eventId = '';
+    }
+
     print(eventId);
   }
 
-  Future getEventName(eventId, uid) async {
+  Future getEventName(eventId) async {
     try {
-      String eeventName = await _firestore
-          .collection("Events")
-          .document(eventId)
-          .collection('members')
-          .document(uid)
-          .get()
-          .then(
-            (docSnapshot) => docSnapshot.data['event name'],
-          );
+      String eeventName =
+          await _firestore.collection("Events").document(eventId).get().then(
+                (docSnapshot) => docSnapshot.data['event name'],
+              );
       eventName = eeventName;
       print(eventName);
     } catch (_) {
@@ -87,10 +87,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       print("got uid");
       getEventId(userUid).then((_) {
         print('got event id');
-        getEventName(eventId, userUid).then((_) {
+        getEventName(eventId).then((_) {
           print('got event data');
           checkInviteData(userUid).then((_) {
             print("checked invite data");
+            print('UID ' + userUid);
+            print('EVENTID ' + eventId);
+
             setState(() {});
           });
         });
@@ -191,11 +194,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                             );
                           } else {
                             return recienvedInvitationForFamily(
-                                context,
-                                document['event name'],
-                                document['host'],
-                                userUid,
-                                eventId);
+                              context,
+                              document['event name'],
+                              document['host'],
+                              document['invite to family uid'],
+                              document['invite to family event id'],
+                              userUid,
+                            );
                           }
                         },
                       ).toList(),
@@ -279,8 +284,15 @@ Widget recievedInvitationForEvent(BuildContext context, String name,
   );
 }
 
-Widget recienvedInvitationForFamily(BuildContext context, String name,
-    String host, String uid, String eventId) {
+Widget recienvedInvitationForFamily(
+  BuildContext context,
+  String eventName,
+  String host,
+  String uidOfFamilyInvitation,
+  String eventIdOfFamilyInvitation,
+  String userUid,
+  
+) {
   TextEditingController _familyMemberNameController = TextEditingController();
 
   return Container(
@@ -313,8 +325,18 @@ Widget recienvedInvitationForFamily(BuildContext context, String name,
                     ),
                     RaisedButton(
                       onPressed: () {
+                        print('UIDDD : ' + uidOfFamilyInvitation);
+                        print('EEVVVENET ID ' + eventIdOfFamilyInvitation);
+                        print('FAM NAME CONTROLLER TEXT ' +
+                            _familyMemberNameController.text);
                         _fire.acceptInviteToFamily(
-                            uid, eventId, _familyMemberNameController.text);
+                          uidOfFamilyInvitation,
+                          eventIdOfFamilyInvitation,
+                          _familyMemberNameController.text,
+                          userUid,
+                          eventName,
+                          
+                        );
                         Navigator.pop(context);
                       },
                       child: Text('enter'),

@@ -128,13 +128,7 @@ Widget gift(
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          size: 28,
-                        ),
-                        onPressed: () {},
-                      ),
+                     
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.005,
                       ),

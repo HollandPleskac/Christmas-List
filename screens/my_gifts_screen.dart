@@ -20,8 +20,6 @@ class _MyGiftsScreenState extends State<MyGiftsScreen> {
     TextEditingController _giftNameController = TextEditingController();
     TextEditingController _giftPriceController = TextEditingController();
 
-    TextEditingController _giftNameEditController = TextEditingController();
-    TextEditingController _giftPriceEditController = TextEditingController();
 
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final routeArguments = ModalRoute.of(context).settings.arguments as Map;
